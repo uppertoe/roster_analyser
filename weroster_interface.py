@@ -16,12 +16,12 @@ logger = logging.getLogger(__name__)
 
 class WerosterClient:
     def __init__(self, start_date=None, end_date=None):
-        # Calculate the date four months ago from now
-        four_months_ago = datetime.now() - relativedelta(months=2)
+        # Calculate a default initial date from now
+        default_start_date = datetime.now() - relativedelta(months=2)
         
-        # Set start_date to four months ago if not provided
+        # Set start_date if not provided
         if start_date is None:
-            start_date = four_months_ago
+            start_date = default_start_date
         
         # Use the provided end_date only if start_date is provided and before end_date
         if start_date and end_date and start_date < end_date:
