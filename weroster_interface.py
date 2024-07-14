@@ -194,22 +194,6 @@ class WerosterClient:
             events.append(event_details)
         
         return events
-
-    @staticmethod        
-    def _merge_dicts(dict_1, dict_2):
-        for key, value in dict_2.items():
-            if key not in dict_1:
-                dict_1[key] = value
-            else:
-                if isinstance(value, dict) and isinstance(dict_1[key], dict):
-                    for sub_key, sub_value in value.items():
-                        if sub_key in dict_1[key]:
-                            dict_1[key][sub_key] += sub_value
-                        else:
-                            dict_1[key][sub_key] = sub_value
-                else:
-                    dict_1[key] += value
-        return dict_1
     
     def get_registrar_list_counts(self, data):
         events = self.parse_events(data)
