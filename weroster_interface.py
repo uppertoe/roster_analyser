@@ -147,6 +147,8 @@ class WerosterClient:
             logger.error(f"Start {start_date} must be before end {end_date}")
 
     def generate_weeks(self):
+        maximum_weeks = 26  # Cap the number of requests
+
         start_date = self.start_date
         end_date = self.end_date
 
@@ -166,8 +168,9 @@ class WerosterClient:
 
             weeks.append((week_start.strftime("%Y-%m-%d"), week_end.strftime("%Y-%m-%d")))
             current_date = week_end + timedelta(days=1)
-
-        return weeks
+    
+        # Return up to the maximum weeks
+        return weeks[-maximum_weeks:]
     
     def parse_events(self, data):
         events = []
