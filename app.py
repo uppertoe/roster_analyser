@@ -62,6 +62,26 @@ def registrars():
     client.close_connection()
     return render_template('registrars.html', registrars=registrars)
 
+@app.route('/consultants')
+def consultants():
+    token = request.args.get('token')
+    start_date_str = request.args.get('start_date')
+    end_date_str = request.args.get('end_date')
+
+    if not token or not verify_token(token):
+        abort(403)  # Forbidden
+
+    # Convert date strings to datetime objects if they exist
+    start_date = datetime.strptime(start_date_str, "%Y-%m-%d") if start_date_str else None
+    end_date = datetime.strptime(end_date_str, "%Y-%m-%d") if end_date_str else None
+
+    client = WerosterClient(start_date=start_date, end_date=end_date)
+    client.login()
+    client.designations_to_include = ['anaesthetist']
+    registrars = client.assemble_registrar_events()
+    client.close_connection()
+    return render_template('consultants.html', registrars=registrars)
+
 @app.route('/dates', methods=['GET', 'POST'])
 def set_dates():
     token = request.args.get('token')
@@ -80,6 +100,8 @@ def set_dates():
             return redirect(url_for('events', token=token, start_date=start_date_str, end_date=end_date_str))
         elif 'view_registrars' in request.form:
             return redirect(url_for('registrars', token=token, start_date=start_date_str, end_date=end_date_str))
+        elif 'view_consultants' in request.form:
+            return redirect(url_for('consultants', token=token, start_date=start_date_str, end_date=end_date_str))
     
     return render_template('set_dates.html', default_start_date=default_start_date, default_end_date=default_end_date)
 
